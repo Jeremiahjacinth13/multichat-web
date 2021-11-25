@@ -4,12 +4,17 @@ import { Header } from './Header'
 import { Loader } from './Loader'
 import people from '../people.jpeg'
 
+import { UserContext, UserContextType } from '../UserContext'
+
 import {
     getAuth,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     setPersistence,
-    browserLocalPersistence
+    browserLocalPersistence,
+    signInWithPopup,
+    GoogleAuthProvider,
+    UserCredential
 } from 'firebase/auth'
 
 import './styles.css'
@@ -24,12 +29,27 @@ const Auth: React.FC = function () {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>('')
 
+    const { setUser } = React.useContext<UserContextType>(UserContext)
+
     const navigate = useNavigate()
 
     const auth = getAuth()
 
-    const signInWithGoogle = () => {
+    auth.useDeviceLanguage()
 
+    const signInWithGoogle = async () => {
+        try {
+            const googleProvider = new GoogleAuthProvider()
+            const result: UserCredential = await signInWithPopup(auth, googleProvider)
+
+            if (result.user) {
+                setUser(result.user)
+                navigate('../')
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     const signInWithEmail = async (e) => {
@@ -40,21 +60,23 @@ const Auth: React.FC = function () {
                 .then(async () => {
                     if (authType === 'login') {
                         return signInWithEmailAndPassword(auth, email, password)
-                        .then(user => {
-                            if (user) {
-                                setLoading(false)
-                                navigate('../')
-                            }
-                        })
+                            .then(user => {
+                                if (user) {
+                                    setUser(user)
+                                    setLoading(false)
+                                    navigate('../')
+                                }
+                            })
                     }
-                    else{
+                    else {
                         return createUserWithEmailAndPassword(auth, email, password)
-                        .then(user => {
-                            if(user){
-                                setLoading(false)
-                                navigate('../')
-                            }
-                        })
+                            .then(user => {
+                                if (user) {
+                                    setUser(user)
+                                    setLoading(false)
+                                    navigate('../')
+                                }
+                            })
                     }
                 })
                 .catch(error => {
@@ -96,7 +118,7 @@ const Auth: React.FC = function () {
                     }</p>
                     <button type="submit">{loading ? <Loader /> : authType === 'signup' ? 'Sign Up' : "Login"}</button>
                     <p className='heading'>OR</p>
-                    <button onClick={signInWithGoogle} style={{ letterSpacing: 'normal' }}>
+                    <button onClick={signInWithGoogle} style={{ letterSpacing: 'normal' }} type='button'>
                         <img
                             src='https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg'
                             alt='logo'
