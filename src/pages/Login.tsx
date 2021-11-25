@@ -1,8 +1,19 @@
-import React, { useState, FormEventHandler } from 'react'
+import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Header } from './Header'
+import { Loader } from './Loader'
 import people from '../people.jpeg'
 
+import {
+    getAuth,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    setPersistence,
+    browserLocalPersistence
+} from 'firebase/auth'
+
 import './styles.css'
+
 
 const Auth: React.FC = function () {
     type AuthType = 'login' | 'signup'
@@ -10,12 +21,37 @@ const Auth: React.FC = function () {
     const [authType, setAuthType] = useState<AuthType>('login')
     const [password, setPassword] = useState<string>('')
     const [email, setEmail] = useState<string>('')
+    const [loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string>('')
+
+    const navigate = useNavigate()
+
+    const auth = getAuth()
 
     const signInWithGoogle = () => {
-        
+
     }
-    const signInWithEmail = (e) => { 
+
+    const signInWithEmail = async (e) => {
         e.preventDefault();
+        setLoading(true)
+        setTimeout(() => {
+            setPersistence(auth, browserLocalPersistence)
+                .then(async () => {
+                    return signInWithEmailAndPassword(auth, email, password)
+                        .then(user => {
+                            if (user) {
+                                setLoading(false)
+                                navigate('../')
+                            }
+                        })
+                })
+                .catch(error => {
+                    setLoading(false)
+                    setError(error.message)
+                })
+        }, 3000)
+
     }
 
     return (
@@ -31,6 +67,7 @@ const Auth: React.FC = function () {
                 </div>
                 <form onSubmit={signInWithEmail}>
                     <p className='heading'>{authType === 'login' ? 'Login' : "Sign Up"}</p>
+                    {error && <div className='error'>{error}</div>}
                     <input
                         type="text"
                         onChange={e => setEmail(e.currentTarget.value)}
@@ -41,12 +78,12 @@ const Auth: React.FC = function () {
                         onChange={e => setPassword(e.currentTarget.value)}
                         value={password}
                     />
-                    <p className = 'signupText' onClick={() => setAuthType(authType === 'signup' ? 'login' : 'signup')}>{
+                    <p className='signupText' onClick={() => setAuthType(authType === 'signup' ? 'login' : 'signup')}>{
                         authType === 'signup' ?
                             'Already have an account? Login' :
                             'Don\'t have an account? Signup'
                     }</p>
-                    <button type="submit">{authType === 'signup' ? 'Sign Up' : "Login"}</button>
+                    <button type="submit">{loading ? <Loader /> : authType === 'signup' ? 'Sign Up' : "Login"}</button>
                     <p className='heading'>OR</p>
                     <button onClick={signInWithGoogle} style={{ letterSpacing: 'normal' }}>
                         <img
