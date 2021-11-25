@@ -1,26 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { getAuth } from 'firebase/auth';
+import { firebaseApp } from './firebase';
 
-function App() {
+import { Auth } from './pages/Login';
+import { Chat } from './pages/Chat';
+
+import './App.css'
+
+const App: React.FC = () => {
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path='/auth'
+          element={<Auth />}
+        />
+        <Route
+          path='/'
+          element={
+            <RequireAuth>
+              <Chat />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path='/chat'
+          element={
+            <RequireAuth>
+              <Chat />
+            </RequireAuth>
+          }
+        />
+      </Routes>
+    </BrowserRouter>
   );
+}
+
+const RequireAuth: React.FC = () => {
+
+  const isAuthenticated = !!getAuth(firebaseApp).currentUser
+
+  if (isAuthenticated) return <Outlet />
+  else return <Navigate to='../auth' replace={true} />
+
 }
 
 export default App;
