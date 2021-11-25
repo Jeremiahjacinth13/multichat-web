@@ -4,10 +4,12 @@ import { User } from 'firebase/auth'
 
 export type UserContextType = {
     user: User | null
-    setUser: Function
+    loginUser: Function
+    logoutUser: Function
 }
 
 export const UserContext = createContext<UserContextType>({
     user: null, 
-    setUser: () => {}
+    loginUser: () => {},
+    logoutUser: () => {}
 });

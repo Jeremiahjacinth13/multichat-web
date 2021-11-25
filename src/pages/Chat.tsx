@@ -1,7 +1,9 @@
 import React from 'react'
-import {signOut, getAuth} from 'firebase/auth'
+import { UserContext, UserContextType } from '../UserContext'
 
 const Chat: React.FC = function () {
+
+    const {logoutUser} = React.useContext<UserContextType>(UserContext)
 
     return (
         <div className='chatScreen'>
@@ -9,7 +11,7 @@ const Chat: React.FC = function () {
             {
 
             }
-            {/* <button onClick = {() => auth.signOut()}></button> */}
+            <button onClick={() => logoutUser()}></button>
         </div>
     )
 }

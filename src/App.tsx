@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { getAuth, User } from 'firebase/auth'
 import { firebaseApp } from './firebase';
 import { UserContext, UserContextType } from './UserContext';
@@ -18,29 +18,28 @@ const App: React.FC = () => {
   return (
     <UserContext.Provider value={{
       user: userState,
-      setUser: setUserState
+
+      loginUser: (user: User) => setUserState(user),
+
+      logoutUser: () => {
+        auth.signOut()
+        .then(() => setUserState(null))
+      }
+
     }}>
       <BrowserRouter>
         <Routes>
           <Route
-            path='/auth'
-            element={<Auth />}
-          />
-          <Route
             path='/'
-            element={
-              <RequireAuth>
-                <Chat />
-              </RequireAuth>
-            }
+            element={<RequireAuth element={<Chat />} />}
           />
           <Route
             path='/chat'
-            element={
-              <RequireAuth>
-                <Chat />
-              </RequireAuth>
-            }
+            element={<RequireAuth element={<Chat />} />}
+          />
+          <Route
+            path='/auth'
+            element={<Auth />}
           />
         </Routes>
       </BrowserRouter>
@@ -48,13 +47,13 @@ const App: React.FC = () => {
   );
 }
 
-const RequireAuth: React.FC = () => {
+const RequireAuth: React.FC<{ element: React.ReactElement }> = ({ element }) => {
 
-  const {user} = React.useContext<UserContextType>(UserContext)
+  const { user } = React.useContext<UserContextType>(UserContext)
 
   const isAuthenticated = !!user;
 
-  if (isAuthenticated) return <Outlet />
+  if (isAuthenticated) return element
   else return <Navigate to='../auth' replace={true} />
 
 }

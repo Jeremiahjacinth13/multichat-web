@@ -29,7 +29,7 @@ const Auth: React.FC = function () {
     const [loading, setLoading] = useState<boolean>(false)
     const [error, setError] = useState<string>('')
 
-    const { setUser } = React.useContext<UserContextType>(UserContext)
+    const { loginUser } = React.useContext<UserContextType>(UserContext)
 
     const navigate = useNavigate()
 
@@ -43,7 +43,7 @@ const Auth: React.FC = function () {
             const result: UserCredential = await signInWithPopup(auth, googleProvider)
 
             if (result.user) {
-                setUser(result.user)
+                loginUser(result.user)
                 navigate('../')
             }
 
@@ -62,7 +62,7 @@ const Auth: React.FC = function () {
                         return signInWithEmailAndPassword(auth, email, password)
                             .then(user => {
                                 if (user) {
-                                    setUser(user)
+                                    loginUser(user)
                                     setLoading(false)
                                     navigate('../')
                                 }
@@ -72,7 +72,7 @@ const Auth: React.FC = function () {
                         return createUserWithEmailAndPassword(auth, email, password)
                             .then(user => {
                                 if (user) {
-                                    setUser(user)
+                                    loginUser(user)
                                     setLoading(false)
                                     navigate('../')
                                 }
