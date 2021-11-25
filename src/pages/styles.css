@@ -94,6 +94,7 @@ form button
     background: #2b72c5;
     text-transform: uppercase;
     letter-spacing: 0.2em;
+    cursor: pointer;
 }
 .signupText{
     font-family: 'DM Serif Text', serif;
@@ -174,3 +175,4 @@ form button
 .container{width: 70%}
 .mx-auto{margin: 0 auto;}
 .error{color: tomato}
+.pointer{cursor: pointer;}

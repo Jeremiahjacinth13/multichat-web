@@ -38,13 +38,24 @@ const Auth: React.FC = function () {
         setTimeout(() => {
             setPersistence(auth, browserLocalPersistence)
                 .then(async () => {
-                    return signInWithEmailAndPassword(auth, email, password)
+                    if (authType === 'login') {
+                        return signInWithEmailAndPassword(auth, email, password)
                         .then(user => {
                             if (user) {
                                 setLoading(false)
                                 navigate('../')
                             }
                         })
+                    }
+                    else{
+                        return createUserWithEmailAndPassword(auth, email, password)
+                        .then(user => {
+                            if(user){
+                                setLoading(false)
+                                navigate('../')
+                            }
+                        })
+                    }
                 })
                 .catch(error => {
                     setLoading(false)
@@ -78,7 +89,7 @@ const Auth: React.FC = function () {
                         onChange={e => setPassword(e.currentTarget.value)}
                         value={password}
                     />
-                    <p className='signupText' onClick={() => setAuthType(authType === 'signup' ? 'login' : 'signup')}>{
+                    <p className='signupText pointer' onClick={() => setAuthType(authType === 'signup' ? 'login' : 'signup')}>{
                         authType === 'signup' ?
                             'Already have an account? Login' :
                             'Don\'t have an account? Signup'
