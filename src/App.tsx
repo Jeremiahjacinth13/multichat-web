@@ -12,7 +12,7 @@ const App: React.FC = () => {
   // dummy user type - Replace with firebase's default user
   type User = {}
 
-  const [userState, setUserState] = React.useState<User | null>(null)
+  const [userState, setUserState] = React.useState<User | null>({})
 
   return (
     <UserContext.Provider value={{
