@@ -230,7 +230,7 @@ form input:focus
     flex-direction: row;
 }
 .chatMessage.notSelf p {
-    background: lightgray;
+    background: white;
     border-bottom-right-radius: 20px;
     border-bottom-left-radius: 2px;
 }
