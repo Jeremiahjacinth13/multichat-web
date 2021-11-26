@@ -6,6 +6,9 @@ header
     position: fixed;
     width: 100%;
     z-index: 1;
+}
+header.bdfilter
+{
     backdrop-filter: blur(100px);
 }
 header > div {
@@ -180,7 +183,7 @@ form input:focus
 
 .container{width: 70%}
 .mx-auto{margin: 0 auto;}
-.error{color: tomato}
+.error{color: white; background: tomato; padding: 1em}
 .pointer{cursor: pointer;}
 
 
