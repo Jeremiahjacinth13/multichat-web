@@ -6,12 +6,12 @@ import './styles.css'
 export const Header: React.FC = () => {
 
     const {logoutUser} = React.useContext<UserContextType>(UserContext)
-    
+
     return (
         <header className='header'>
             <div className="container mx-auto">
                 <Link to='/' className='multichatLogo'>MC.</Link>
-                <button onClick={() => logoutUser()}>Logout</button>
+                <button className = 'logoutButton' onClick={() => logoutUser(null)}>Logout</button>
             </div>
         </header>
     )

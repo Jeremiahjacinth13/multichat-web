@@ -60,7 +60,7 @@ const Auth: React.FC = function () {
                 .then(async () => {
                     if (authType === 'login') {
                         return signInWithEmailAndPassword(auth, email, password)
-                            .then(user => {
+                            .then(({user}) => {
                                 if (user) {
                                     loginUser(user)
                                     setLoading(false)
@@ -70,7 +70,7 @@ const Auth: React.FC = function () {
                     }
                     else {
                         return createUserWithEmailAndPassword(auth, email, password)
-                            .then(user => {
+                            .then(({user}) => {
                                 if (user) {
                                     loginUser(user)
                                     setLoading(false)

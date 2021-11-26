@@ -19,7 +19,7 @@ const App: React.FC = () => {
     <UserContext.Provider value={{
       user: userState,
 
-      loginUser: (user: User) => setUserState(user),
+      loginUser: setUserState,
 
       logoutUser: () => {
         auth.signOut()
