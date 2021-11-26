@@ -40,7 +40,7 @@ const Chat: React.FC = function () {
 
     return (
         <div className='chat'>
-            <Header className = 'bdfilter'/>
+            <Header className = 'small'/>
             <ChatArea messages={messages} />
             <ChatController setMessages={setMessages} />
         </div>
