@@ -1,6 +1,9 @@
 import React from 'react'
 import { createContext } from 'react'
-import { User } from 'firebase/auth'
+
+
+//dummy user - replace with firebase's default user
+type User = {}
 
 
 export type UserContextType = {

@@ -1,6 +1,4 @@
 import React, { useEffect } from 'react'
-import { getAuth } from 'firebase/auth'
-import { getDatabase, ref, onValue, push } from 'firebase/database'
 import './styles.css'
 import { Header } from './Header'
 
@@ -26,16 +24,9 @@ const getMessagesFromRequest = (requestMessages: any[]): Message[] => {
 const Chat: React.FC = function () {
 
     const [messages, setMessages] = React.useState<Message[]>([])
-    const db = getDatabase()
 
     useEffect(() => {
-        (async function () {
-            const messagesRef = ref(db, 'messages')
-            onValue(messagesRef, snapshot => {
-                let messagesData = Object.values(snapshot.val() || [])
-                setMessages(getMessagesFromRequest(messagesData))
-            })
-        })()
+
     }, [])
 
     return (
@@ -50,25 +41,12 @@ const Chat: React.FC = function () {
 const ChatController: React.FC<{ setMessages: React.Dispatch<React.SetStateAction<Message[]>> }> = () => {
 
     const [text, setText] = React.useState<string>('')
-    const db = getDatabase()
-    const auth = getAuth()
-    const messagesRef = ref(db, 'messages')
-
+    
     const inputElementRef = React.createRef<HTMLInputElement>()
 
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const newMessage = {
-            createdAt: Date.now(),
-            text,
-            sender: {
-                id: auth.currentUser?.uid,
-                [auth.currentUser?.photoURL ? 'image' : 'letter']:
-                    auth.currentUser?.photoURL || auth.currentUser?.email?.charAt(0)
-            }
-        }
-        await push(messagesRef, newMessage)
         setText('')
         inputElementRef.current?.focus()
     }
@@ -118,8 +96,7 @@ const MessageImage: React.FC<{ message: Message }> = ({ message }) => {
 
 const ChatMessage: React.FC<{ message: Message }> = ({ message }) => {
 
-    const auth = getAuth()
-    const isSelf = auth.currentUser?.uid === message.senderId
+    const isSelf = true
 
     return (
         <div className={`chatMessage ${isSelf ? 'self' : 'notSelf'}`}>

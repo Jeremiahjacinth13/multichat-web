@@ -6,17 +6,6 @@ import people from '../people.jpeg'
 
 import { UserContext, UserContextType } from '../UserContext'
 
-import {
-    getAuth,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    setPersistence,
-    browserLocalPersistence,
-    signInWithPopup,
-    GoogleAuthProvider,
-    UserCredential
-} from 'firebase/auth'
-
 import './styles.css'
 
 
@@ -33,58 +22,13 @@ const Auth: React.FC = function () {
 
     const navigate = useNavigate()
 
-    const auth = getAuth()
-
-    auth.useDeviceLanguage()
-
     const signInWithGoogle = async () => {
-        try {
-            const googleProvider = new GoogleAuthProvider()
-            const result: UserCredential = await signInWithPopup(auth, googleProvider)
-
-            if (result.user) {
-                loginUser(result.user)
-                navigate('../')
-            }
-
-        } catch (error) {
-            console.log(error)
-        }
+        
     }
 
     const signInWithEmail = async (e) => {
         e.preventDefault();
         setLoading(true)
-        setTimeout(() => {
-            setPersistence(auth, browserLocalPersistence)
-                .then(async () => {
-                    if (authType === 'login') {
-                        return signInWithEmailAndPassword(auth, email, password)
-                            .then(({user}) => {
-                                if (user) {
-                                    loginUser(user)
-                                    setLoading(false)
-                                    navigate('../')
-                                }
-                            })
-                    }
-                    else {
-                        return createUserWithEmailAndPassword(auth, email, password)
-                            .then(({user}) => {
-                                if (user) {
-                                    loginUser(user)
-                                    setLoading(false)
-                                    navigate('../')
-                                }
-                            })
-                    }
-                })
-                .catch(error => {
-                    setLoading(false)
-                    setError(error.message)
-                })
-        }, 3000)
-
     }
 
     return (

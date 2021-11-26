@@ -1,7 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { getAuth, User } from 'firebase/auth'
-import { firebaseApp } from './firebase';
 import { UserContext, UserContextType } from './UserContext';
 
 import { Auth } from './pages/Login';
@@ -11,9 +9,10 @@ import './App.css'
 
 const App: React.FC = () => {
 
-  const auth = getAuth(firebaseApp)
+  // dummy user type - Replace with firebase's default user
+  type User = {}
 
-  const [userState, setUserState] = React.useState<User | null>(auth.currentUser)
+  const [userState, setUserState] = React.useState<User | null>(null)
 
   return (
     <UserContext.Provider value={{
@@ -22,8 +21,7 @@ const App: React.FC = () => {
       loginUser: setUserState,
 
       logoutUser: () => {
-        auth.signOut()
-        .then(() => setUserState(null))
+        
       }
 
     }}>
