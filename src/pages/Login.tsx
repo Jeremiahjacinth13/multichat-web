@@ -52,39 +52,31 @@ const Auth: React.FC = function () {
         }
     }
 
-    const signInWithEmail = async (e) => {
+    const signInWithEmail: React.FormEventHandler<HTMLFormElement> = async (e) => {
         e.preventDefault();
         setLoading(true)
-        setTimeout(() => {
-            setPersistence(auth, browserLocalPersistence)
-                .then(async () => {
-                    if (authType === 'login') {
-                        return signInWithEmailAndPassword(auth, email, password)
-                            .then(({user}) => {
-                                if (user) {
-                                    loginUser(user)
-                                    setLoading(false)
-                                    navigate('../')
-                                }
-                            })
-                    }
-                    else {
-                        return createUserWithEmailAndPassword(auth, email, password)
-                            .then(({user}) => {
-                                if (user) {
-                                    loginUser(user)
-                                    setLoading(false)
-                                    navigate('../')
-                                }
-                            })
+        if (authType === 'login') {
+            return signInWithEmailAndPassword(auth, email, password)
+                .then(({ user }) => {
+                    if (user) {
+                        loginUser(user)
+                        navigate('../')
                     }
                 })
-                .catch(error => {
-                    setLoading(false)
-                    setError(error.message)
+                .catch(error => setError(error.message))
+                .finally(() => setLoading(false))
+        }
+        else {
+            return createUserWithEmailAndPassword(auth, email, password)
+                .then(({ user }) => {
+                    if (user) {
+                        loginUser(user)
+                        navigate('../')
+                    }
                 })
-        }, 3000)
-
+                .catch(error => setError(error.message))
+                .finally(() => setLoading(false))
+        }
     }
 
     return (

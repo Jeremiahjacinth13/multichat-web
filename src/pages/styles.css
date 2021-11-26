@@ -11,6 +11,7 @@ header.bdfilter
 {
     backdrop-filter: blur(100px);
 }
+
 header > div {
     display: flex;
     align-items: center;
@@ -35,6 +36,8 @@ header > div {
 .loginRight
 {
     position: relative;
+    width: 100vw;
+    overflow: hidden;
 }
 .loginRight::after{
     content: '';
@@ -275,4 +278,42 @@ input{
 }
 .chatForm input{
     width: 85%;
+}
+
+@media screen and (max-width: 767px) {
+    .container{
+        width: 90%
+    }
+    .multichatLogo
+    {
+        font-size: 1.5em;
+    }
+    .login form{
+        transition: all 500ms ease;
+        position: relative;
+        left: 0%;
+        bottom: 0px;
+        transform: translateX(0%);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+        background: none;
+        width: 360px;
+        margin: auto;
+        color: white;
+        text-align: center;
+        padding: 1em;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+    form p.heading{
+        font-size: 18px;
+    }
+    .chatMessage
+    {
+        max-width: 70%;
+    }
+    .chatMessage p {
+        padding: 0.5em
+    }
+
 }
