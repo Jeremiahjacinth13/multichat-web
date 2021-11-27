@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { getAuth } from 'firebase/auth'
-import { getDatabase, ref, onValue, push } from 'firebase/database'
+import { getDatabase, ref, onValue, push, off } from 'firebase/database'
 import './styles.css'
 import { Header } from './Header'
 
@@ -29,18 +29,18 @@ const Chat: React.FC = function () {
     const db = getDatabase()
 
     useEffect(() => {
-        (async function () {
-            const messagesRef = ref(db, 'messages')
-            onValue(messagesRef, snapshot => {
-                let messagesData = Object.values(snapshot.val() || [])
-                setMessages(getMessagesFromRequest(messagesData))
-            })
-        })()
+        const messagesRef = ref(db, 'messages')
+        const messagesSubscriber = onValue(messagesRef, snapshot => {
+            let messagesData = Object.values(snapshot.val() || [])
+            setMessages(getMessagesFromRequest(messagesData))
+        })
+
+        return messagesSubscriber;
     }, [])
 
     return (
         <div className='chat'>
-            <Header className = 'small'/>
+            <Header className='small' />
             <ChatArea messages={messages} />
             <ChatController setMessages={setMessages} />
         </div>

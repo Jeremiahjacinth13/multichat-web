@@ -11,6 +11,9 @@ header.bdfilter
 {
     backdrop-filter: blur(100px);
 }
+header.small{
+    background: black;
+}
 
 header > div {
     display: flex;
